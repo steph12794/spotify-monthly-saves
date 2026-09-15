@@ -23,7 +23,10 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          
+
+      - name: restore spotify auth cache
+        run: echo '${{ secrets.SPOTIPY_CACHE }}' > .cache
+
       - name: execute py script # run main.py
         env:
           CLIENT_ID: ${{ secrets.CLIENT_ID }}

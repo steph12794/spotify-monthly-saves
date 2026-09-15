@@ -82,7 +82,7 @@ class Playlist:
                 return False
             if 'items' not in results:
                 return False
-            collected.extend(Song(x) for x in results['items'])
+            collected.extend(Song(x) for x in results['items'] if x.get('track'))
             if len(results['items']) < limit:
                 break
             offset += limit
@@ -252,8 +252,7 @@ class MonthlyPlaylists:
         # If playlist still not found, create it
         if playlist is None:
             try:
-                data = self.sp.user_playlist_create(
-                    user=self.user_id, name=name)
+                data = self.sp._post("me/playlists", payload={"name": name})
             except Exception as e:
                 print(repr(e))
                 return None
@@ -267,7 +266,7 @@ class MonthlyPlaylists:
 spotify = MonthlyPlaylists(
     client_id= os.environ["CLIENT_ID"],
     client_secret= os.environ["CLIENT_SECRET"],
-    redirect_uri='http://localhost:3000'
+    redirect_uri='http://127.0.0.1:3000'
 )
 
 # The class updates its date threshold to whichever song it added last.
